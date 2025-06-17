@@ -26,7 +26,7 @@ if uploaded_file:
     all_columns = df.columns.tolist()
     target_column = st.sidebar.selectbox(" Select Target Column", all_columns)
 
-    model_type = st.sidebar.selectbox(" Select Model Type", ["ANN", "CNN", "RNN", "LSTM", "GRU"])
+    model_type = st.sidebar.selectbox(" Select Model Type", ["ANN","RNN", "LSTM", "GRU"])
     test_size = st.sidebar.slider(" Test Size (in %)", 10, 50, 20) / 100
     epochs = st.sidebar.slider(" Epochs", 1, 100, 10)
 
@@ -44,11 +44,6 @@ if uploaded_file:
         if model_type == "ANN":
             model.add(Dense(64, activation='relu', input_shape=input_shape))
             model.add(Dense(32, activation='relu'))
-        elif model_type == "CNN":
-            X_train = X_train.reshape(X_train.shape[0], X_train.shape[1], 1)
-            X_test = X_test.reshape(X_test.shape[0], X_test.shape[1], 1)
-            model.add(Conv1D(32, 3, activation='relu', input_shape=(X_train.shape[1], 1)))
-            model.add(Flatten())
         elif model_type == "RNN":
             X_train = X_train.reshape(X_train.shape[0], X_train.shape[1], 1)
             X_test = X_test.reshape(X_test.shape[0], X_test.shape[1], 1)
@@ -85,7 +80,7 @@ if uploaded_file:
         if submitted:
             input_array = np.array(user_input).reshape(1, -1)
             input_array = st.session_state.scaler.transform(input_array)
-            if model_type in ["CNN", "RNN", "LSTM", "GRU"]:
+            if model_type in ["RNN", "LSTM", "GRU"]:
                 input_array = input_array.reshape(1, input_array.shape[1], 1)
             prediction = st.session_state.model.predict(input_array)
             st.success(f" Prediction: {prediction[0][0]:.4f}")
